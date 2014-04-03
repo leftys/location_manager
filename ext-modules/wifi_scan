@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo -n "id = "
+sudo iw dev wlan0 scan |grep SSID |cut -d: -f2|sed 's/^\ //'| tr "\n" "," |sed 's/,$/\n/'

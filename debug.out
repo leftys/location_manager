@@ -1,0 +1,37 @@
+W0402 10:05:28.114253  7925 main.cpp:64] Profile manager v1.1 init
+I0402 10:05:28.122441  7925 main.cpp:66] Will be looking for ext-modules and helpers directories in .
+I0402 10:05:28.126377  7925 main.cpp:76] Using config file profile_manager.cfg
+I0402 10:05:28.126842  7925 Configuration.cpp:78] Entering section senses
+I0402 10:05:28.127190  7925 Configuration.cpp:52]   adding monitor_kolej
+I0402 10:05:28.127475  7925 Configuration.cpp:52]   adding monitor_lab
+I0402 10:05:28.127738  7925 Configuration.cpp:52]   adding kolej_wifi
+I0402 10:05:28.128001  7925 Configuration.cpp:52]   adding doma_wifi
+I0402 10:05:28.128864  7925 Configuration.cpp:52]   adding skola_wifi
+I0402 10:05:28.129184  7925 Configuration.cpp:52]   adding doma_mys
+I0402 10:05:28.129464  7925 Configuration.cpp:52]   adding kolej_kbd
+I0402 10:05:28.129714  7925 Configuration.cpp:78] Entering section actions
+I0402 10:05:28.129976  7925 Configuration.cpp:52]   adding vga-right
+I0402 10:05:28.130249  7925 Configuration.cpp:52]   adding vga-top
+I0402 10:05:28.130522  7925 Configuration.cpp:52]   adding monitors-bottom-aligned
+I0402 10:05:28.130790  7925 Configuration.cpp:52]   adding resolution1280
+I0402 10:05:28.133518  7925 Configuration.cpp:52]   adding resolution1920
+I0402 10:05:28.133641  7925 Configuration.cpp:52]   adding custom_command
+I0402 10:05:28.133818  7925 Module_manager.cpp:30] Found and registered external module my_mute
+I0402 10:05:28.133905  7925 Configuration.cpp:52]   adding mute
+I0402 10:05:28.133996  7925 Configuration.cpp:52]   adding ukaz-okynko
+I0402 10:05:28.134068  7925 Configuration.cpp:78] Entering section locations
+I0402 10:05:28.134135  7925 Configuration.cpp:52]   adding kolej
+I0402 10:05:28.134196  7925 Configuration.cpp:52]   adding skola
+I0402 10:05:28.134256  7925 Configuration.cpp:52]   adding lab
+I0402 10:05:28.134317  7925 Configuration.cpp:78] Entering section rules
+I0402 10:05:28.134404  7925 Configuration.cpp:52]   adding kolej
+I0402 10:05:28.135411  7925 Configuration.cpp:52]   adding skola
+I0402 10:05:28.135529  7925 Configuration.cpp:52]   adding lab
+I0402 10:05:28.136014  7925 Module_monitor.cpp:60] Watching VGA connection
+I0402 10:05:28.136327  7925 Module_usb.cpp:98] Watching USBs
+I0402 10:05:28.152340  7925 Cfg_item.cpp:99] Sense monitor_kolej is 0
+I0402 10:05:28.195569  7925 Cfg_item.cpp:99] Sense kolej_wifi is 0
+I0402 10:05:28.195653  7925 Cfg_item.cpp:99] Sense kolej_kbd is 0
+I0402 10:05:28.212506  7925 Cfg_item.cpp:99] Sense monitor_lab is 0
+I0402 10:05:28.253211  7925 Cfg_item.cpp:99] Sense skola_wifi is 0
+I0402 10:05:28.272294  7925 Cfg_item.cpp:99] Sense monitor_lab is 0

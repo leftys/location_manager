@@ -1,0 +1,47 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\setlength{\parindent}{0pt}
+\setlength{\topmargin}{-1.1in}
+\setlength{\textheight}{9.7in}
+\setlength{\oddsidemargin}{.125in}
+\setlength{\textwidth}{6.25in}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\author{Jan Škoda}
+\title{Profile manager \\ Vývojářská dokumentace}
+\begin{document}
+\maketitle
+\pagestyle{empty}
+
+
+Aplikace je implementovaná v jazyce C++ pro verzi standardu 11 a využívá knihovny Boost, Google logging library, xrandr, x11, gtk3, inotifytools a usb-1.0. 
+
+\section*{Organizace kódu}
+Aplikace sestává z několika dále uvedených hlavních funkčních celků implementovaných v C++, interních modulů zajišťujících komunikaci se systémem skrz C++ knihovny a několika externích modulů zajišťujících totéž pomocí bashových skriptů. Každý modul je potomkem třídy {\it Module}. \\
+\\
+Přehled hlavních tříd podle funkčního celku:
+\begin{itemize}
+    \item Parsování konfigurace -- třídy {\it Configuration} a {\it Cfg\_item} s potomstvem
+    \item Parsování infixových termů lokace -- třída {\it Term\_evaluation}
+    \item Moduly, jejich sledování a spouštění -- třídy {\it Module\_manager}, {\it Module} pro interní a {\it External\_module} pro externí shellové moduly.
+    \item Konkrétní implementace interních modulů -- třídy {\it Module\_usb} a {\it Module\_monitor}.
+\end{itemize}
+
+\section*{Parsování konfigurace}
+Metoda \texttt{main()} vytvoří instanci třídy Configuration, která naparsuje konfiguraci do statických \texttt{std::map} {\it senses,actions,locations} a {\it rules}. K tomu využívá šablonové funkce \texttt{add\_action(mapa, polozka)}, která přidá položku libovolné podtřídy \texttt{Cfg\_item} do příslušné mapy. Pokud parsování narazí na hlavičku sekce (řádku ve tvaru \texttt{[nazev-sekce]}), nastaví do proměnné \texttt{section\_method} částečně aplikované volání (vizte {\it Curryfikace},\texttt{std::bind}) metody \texttt{add\_action}. Parsování konfigurace se pak tedy skládá jen z vytváření instancí podtříd \texttt{Cfg\_item} a volání metody \texttt{add\_action}, která tuto instanci přidá do příslušné mapy. \\
+
+\section*{Parsování termů v definicích lokací}
+Lokace jsou v konfiguraci zadány logickým termem složeným z identifikátorů senzorů a logických operací. Ten je třeba z infixové notace z důvodu efektivity předzpracovat do postfixové. Do postfixové notace se pak dosazuje po každé změně hodnoty některého ze senzorů aby se ověřila přítomnost v lokaci. Pro převod do postfixové notace je použit algoritmus využívající frontu a zásobník znám též jako {\it Shunting-yard algoritmus}. \\
+
+\section*{Logika a implementace modulů}
+Moduly jsou celky, poskytující programu interakci se systémem. A to jak vstup (senses), tak výstup (actions). Jeden modul může poskytovat oba směry interakce. Každý modul implementuje virtuální metody \texttt{string get\_status(const string\& variable)} a \texttt{void set(const string\& variable, const string\& value)}. První z nich získá čárkou oddělený seznam hodnot, kterým je zadaná {\it variable} rovna. Tato metoda implementuje sense/smysl, vstupní funkci modulu. Druhá nastaví proměnnou na zadanou hodnotu. Tato metoda implementuje akci, výstup. \\
+\\
+Každý modul též implementuje virtuální metodu \texttt{void watch()}, která vytvoří jeho vlákno obsluhující změny v systému. Všechny interní moduly z důvodů efektivity využívají vždy jen pasivní čekání (poll, inotify). Pokud dojde ke změně, vyžádá si modul nové vyhodnocení přítomnosti v lokacích (dosazení do termů) zavoláním statické metody \texttt{void reprocess()}. Tato metoda je thread-safe díky mutexovému lock\_guardu. \\
+\\
+Externí moduly realizují zmíněné vstupně výstupní metody voláním příslušného bashového skriptu. Jejich účelem je umožnit uživateli, aby snadno mohl přidávat vlastní funkcionalitu, kterou bude Profile manager umět automaticky využívat. Metoda \texttt{watch} je u smyslových externích modulů implementována aktivním čekáním, tj. každých 5 sekunds znovu spouští skript a dotazuje se jej na změny. \\
+
+\section*{Rozhraní externích modulů}
+Každý externí modul je bashový skript ve složce \texttt{ext-modules}. Při spuštění skriptu bez parametrů vypíše skript na výstup na každé řádce jednu proměnnou a její hodnotu oddělené rovnítkem, kolem nějž mohou být mezery. Pokud je skript zavolán s dvěma parametry, provede v systému změnu dle svého účelu. Prvním parametrem je identifikátor proměnné a druhým její hodnota. Pokud změna uspěje, musí vypsat jedinou řádku \texttt{SET}. Například modul {\it xrandr} při spuštění s parametry {\it vga-resolution} a {\it 1024x768} nastaví rozlišení VGA zařízení. \\
+
+\end{document}

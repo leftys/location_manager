@@ -1,0 +1,12 @@
+[Unit]
+Description=Profile manager (location detection)
+Requires=graphical.target
+
+[Service]
+User=%i
+ExecStart=/usr/libexec/profile_manager/profile_manager 
+KillSignal=SIGTERM
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

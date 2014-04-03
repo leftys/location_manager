@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ -n "$1" ]]; then
+    case "$1" in
+        "connect_network")
+            nmcli con up id $2 || exit 1
+            ;;
+        *)
+            echo "Unknown variable $1!"
+            exit 1
+            ;;
+    esac
+    echo "SET"
+    exit 0
+fi

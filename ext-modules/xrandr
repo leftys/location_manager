@@ -1,0 +1,48 @@
+#!/bin/bash
+
+value="$2"
+if [[ -z "$TMPDIR" ]]; then 
+    TMPDIR=/tmp
+fi
+TMP="${TMPDIR}/profile_manager-xrandr-default"
+
+if [[ -n "$1" ]]; then
+    case "$1" in
+        "vga")
+            case "$value" in
+                "clone")
+                    xrandr --output VGA1 --auto
+                    ;;
+                "right-of" | "left-of" | "above"| "below")
+                    xrandr --output VGA1 --auto --$value LVDS1 || exit 1
+                    ;;
+                "reset")
+                    xrandr --output VGA1 --off
+                    ;;
+            esac
+            ;;
+        "vga-resolution")
+            if [[ "$value" == "reset" ]]; then
+                value=`cat "${TMP}_resolution"`
+                xrandr --output VGA1 --mode "$value" 
+                #dont exit on fail!
+            else
+                xrandr |grep "VGA1" |sed 's/.*connected \([[:digit:]]*x[[:digit:]]*\)\+.*/\1/' >"${TMP}_resolution"
+                xrandr --output VGA1 --mode "$value" || exit 1
+            fi
+            ;;
+        "vga-pos")
+            if [[ "$value" == "reset" ]]; then
+                echo -n #do nothing
+            else
+                xrandr --output VGA1 --pos "$value" || exit 1
+            fi
+            ;;
+        *)
+            echo "Unknown variable $1!"
+            exit 1
+            ;;
+    esac
+    echo "SET"
+    exit 0
+fi

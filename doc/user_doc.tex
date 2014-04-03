@@ -1,0 +1,92 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\setlength{\parindent}{0pt}
+\setlength{\topmargin}{-1.1in}
+\setlength{\textheight}{9.7in}
+\setlength{\oddsidemargin}{.125in}
+\setlength{\textwidth}{6.25in}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\author{Jan Škoda}
+\title{Profile Manager \\ Uživatelská dokumentace}
+\begin{document}
+\maketitle
+
+\pagestyle{empty}
+Profile manager je nástroj pro detekci přítomnosti notebooku v několika předdefinovaných lokacích a přizpůsobení pracovního prostědí pro tyto lokace. Je určen pro OS Linux a pomocí vkompilovaných i externích modulů vnímá \textit{smysly} stav periferií notebooku, určuje \textit{lokaci} a podle ní \textit{akcemi} ovlivňuje chování systému. To vše je konfigurovatelné v textovém souboru a rozšiřitelné externími moduly implementovanými v libovolném programovacím jazyce.
+
+\section*{Spuštění a závislosti}
+%\href{http://www.boost.org/}{Boost}, \href{https://code.google.com/p/google-glog/}{Google logging library} a \href{http://www.libusb.org/}{libusb-1.0}
+Aplikace je implementovaná v jazyce C++ a využívá knihovny Boost, Google logging library, xrandr, x11, gtk3, inotifytools a usb-1.0. Pro použití modulu \textit{wifi\_scan} je navíc potřeba balík \textit{sudo}. Vše je dostupné ve všech obvyklých balíčkovacích systémech. Rozhraním je téměř výlučně konfigurační soubor, dále je program spouštěn z příkazové řádky a může být použit i jako systémová služba. Příklad spuštění programu a zároveň ukázka použití jediného argumentu:
+\begin{verbatim}
+./profile_manager -C /cesta/k/konfiguracnimu_souboru.cfg
+\end{verbatim}
+Pokud není cesta k konfiguraci uvedena argumentem, hledá program soubor \texttt{.profile\_manager.cfg} v domovské složce. Program je možné bezpečně ukončit stiskem \textit{Ctrl-C} nebo signálem \textit{SIGTERM}.
+
+\section*{Příklad konfigurace}
+Uvažme notebook, který se běžně přesouvá mezi lokacemi \texttt{doma} a \texttt{kolej}. Kromě toho je k němu občas ve škole připojen \texttt{projektor}. Doma bude k notebooku připojena USB myš, na koleji zase USB myš, klávesnice a externí monitor, který rozšiřuje pracovní plochu doprava nahoru. Naopak při připojení projektoru chceme nastavit klonování obrazu. Doma i na koleji je navíc k dispozici bezdrátová síť. \\
+\\
+Tuto situaci můžeme obsluhovat následující konfigurací:
+\begin{verbatim}
+[senses]  
+monitor_kolej = monitor.id=Monitor-XYZ
+monitor_nejaky = monitor.id=Any
+kolej_wifi = wifi.id=Kolej_wifi
+doma_wifi = wifi.id=Domaci_wifi
+
+doma_mys = usb.id=046d:c03f
+kolej_kbd = usb.id=04fc:05d8
+kolej_mys = usb.id=04da:046f
+
+[actions]
+monitor_vpravo = xrandr.vga=right-of
+monitory_zarovnane_dole = xrandr.vga-pos=1280x-224
+monitor_rozliseni = xrandr.vga-resolution=1280x1024 
+
+monitor_klonovani = xrandr.vga=clone
+monitor_pomer = xrandr.vga-resolution=1024x768 
+
+[locations]
+kolej = kolej_wifi & (kolej_kbd | kolej_mys)
+doma = doma_wifi & doma_mys
+projektor = monitor_nejaky & !monitor_kolej
+
+[rules]
+kolej = monitor_rozliseni,monitory_zarovnane_dole,monitor_vpravo
+projektor = monitor_klonovani,monitor_pomer
+
+\end{verbatim}
+
+\section*{Popis konfigurace}
+Celá konfigurace je rozdělena do sekcí senses, actions, locations a rules. Každá konfigurační položka (řádka) má formát \texttt{identifikátor = definice}. Definice je buďto infixový výraz (v sekci locations), seznam předtím definovaných identifikátorů (sekce rules) nebo rovnost (v sekcích senses a actions). \\
+\\
+V sekci \textbf{locations} definujeme lokace, ve kterých se může notebook nacházet. To je pro maximální flexibilitu definováno infixovým výrazem složených z identifikátorů smyslů. Takže například v lokaci \texttt{loc = a \& b} jsme tehdy, pokud platí smysly $a$ a $b$. Podporovány jsou operátory $\&,|,\hat{},!$ a samozřejmě závorky. \\
+\\
+V sekci \textbf{rules} definujeme seznam akcí, které se mají provést v dané lokaci. Jednotlivé akce jsou zadány identifikátorem akce ze sekce \textit{actions} a odděleny čárkami.\\
+\\
+V sekci \textbf{senses} definujeme tzv. smysly. Jsou to identifikátory, které buďto platí anebo ne a tím vypovídají o stavu periferií notebooku. Každý smysl testuje jednu proměnnou nějakého smyslového modulu na rovnost oproti nějaké hodnotě. Například \texttt{smysl = monitor.id=Acer XYZ} testuje zda je proměnná id modulu monitor rovna "Acer XYZ". Jinými slovy jestli je připojen tento monitor. \\
+\\
+V sekci \textbf{actions} definujeme akce, kterými můžeme ovlivňovat konfiguraci počítače podle detekované lokace. Konfigurační položky (řádky) mají stejnou syntaxi jako v sekci \textit{senses}, jen je sématika operátoru $=$ přiřazení namísto porovnání. \\
+\\
+
+\section*{Moduly a jejich vlastnosti}
+\subsection*{Smyslové moduly}
+\textbf{monitor} je smyslový modul s jedinou proměnnou \textit{id}. Ta je rovna identifikátoru zařízení, nebo \textit{Any}, pokud je připojeno VGA zařízení. V opačném případě je \textit{id} rovno \textit{None}. \\
+\\
+\textbf{wifi} je smyslový modul s jedinou proměnnou \textit{id}. Ta je rovna ESSID připojené WiFi sítě. \\
+\\
+\textbf{wifi\_scan} je smyslový modul s jedinou proměnnou \textit{id}. Ta je rovna ESSID všech WiFi sítí v okolí. Aby mohl být modul použit, musíte dovolit vašemu uživateli přístup ke scannování WiFi sítí. To realizujte tak, že přidělíte svému uživateli \textit{sudo} práva na spuštění příkazu \texttt{iw dev wlan0 scan} (vizte \texttt{man xrandr}).\\
+\\
+\textbf{usb} je smyslový modul s jedinou proměnnou \textit{id}. Ta je rovna identifikátorům všech připojených USB zařízení. Indentifikátor je ve tvaru \texttt{vendorId:productId}, kde obě id jsou malými písmeny zapsané 4znakové hexa stringy vč. počátečních nul. Tento identifikátor se dá získat například příkazem \texttt{lsusb}.\\
+\subsection*{Akční moduly}
+\textbf{xrandr} má 3 proměnné:
+\begin{itemize}
+    \item \textit{vga} -- Pozice externí obrazovky. Možné hodnoty: \textit{right-of, left-of, below, above}.
+    \item \textit{vga-pos} -- Posun externí obrazovky v pixelech. Např. \textit{1280x-224}. Vizte \texttt{man xrandr}, .
+    \item \textit{vga-resolution} -- Rozlišení externí obrazovky. Např. \textit{1024x768}. Seznam rozlišení podporovaných vaším výstupem zjistíte spuštěním příkazu \texttt{xrandr}.
+\end{itemize}
+
+\textbf{execute} má jedinou proměnnou \textit{command}. Její nastavení spustí zadaný příkaz, kterým je obvykle nějaký uživatelský bash skript. Modul execute nepodporuje argumenty! \\
+
+\end{document}

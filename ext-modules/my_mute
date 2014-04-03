@@ -1,0 +1,23 @@
+#!/bin/bash
+
+value="$2"
+
+if [[ -n "$1" ]]; then
+    case "$1" in
+        "sound")
+            if [[ "$value" == "reset" ]]; then
+                #Je potreba unmutnout vsechny i kdyz mutnu jen Mastera
+                amixer -c 0 set Master unmute >/dev/null || exit 1
+                amixer -c 0 set Speaker unmute >/dev/null || exit 1
+            else
+                amixer -c 0 set Master mute >/dev/null || exit 1
+            fi
+            ;;
+        *)
+            echo "Unknown variable $1!"
+            exit 1
+            ;;
+    esac
+    echo "SET"
+    exit 0
+fi
