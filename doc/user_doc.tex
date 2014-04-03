@@ -9,20 +9,20 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \author{Jan Škoda}
-\title{Profile Manager \\ Uživatelská dokumentace}
+\title{Location Manager \\ Uživatelská dokumentace}
 \begin{document}
 \maketitle
 
 \pagestyle{empty}
-Profile manager je nástroj pro detekci přítomnosti notebooku v několika předdefinovaných lokacích a přizpůsobení pracovního prostědí pro tyto lokace. Je určen pro OS Linux a pomocí vkompilovaných i externích modulů vnímá \textit{smysly} stav periferií notebooku, určuje \textit{lokaci} a podle ní \textit{akcemi} ovlivňuje chování systému. To vše je konfigurovatelné v textovém souboru a rozšiřitelné externími moduly implementovanými v libovolném programovacím jazyce.
+Location manager je nástroj pro detekci přítomnosti notebooku v několika předdefinovaných lokacích a přizpůsobení pracovního prostědí pro tyto lokace. Je určen pro OS Linux a pomocí vkompilovaných i externích modulů vnímá \textit{smysly} stav periferií notebooku, určuje \textit{lokaci} a podle ní \textit{akcemi} ovlivňuje chování systému. To vše je konfigurovatelné v textovém souboru a rozšiřitelné externími moduly implementovanými v libovolném programovacím jazyce.
 
 \section*{Spuštění a závislosti}
 %\href{http://www.boost.org/}{Boost}, \href{https://code.google.com/p/google-glog/}{Google logging library} a \href{http://www.libusb.org/}{libusb-1.0}
 Aplikace je implementovaná v jazyce C++ a využívá knihovny Boost, Google logging library, xrandr, x11, gtk3, inotifytools a usb-1.0. Pro použití modulu \textit{wifi\_scan} je navíc potřeba balík \textit{sudo}. Vše je dostupné ve všech obvyklých balíčkovacích systémech. Rozhraním je téměř výlučně konfigurační soubor, dále je program spouštěn z příkazové řádky a může být použit i jako systémová služba. Příklad spuštění programu a zároveň ukázka použití jediného argumentu:
 \begin{verbatim}
-./profile_manager -C /cesta/k/konfiguracnimu_souboru.cfg
+./location_manager -C /cesta/k/konfiguracnimu_souboru.cfg
 \end{verbatim}
-Pokud není cesta k konfiguraci uvedena argumentem, hledá program soubor \texttt{.profile\_manager.cfg} v domovské složce. Program je možné bezpečně ukončit stiskem \textit{Ctrl-C} nebo signálem \textit{SIGTERM}.
+Pokud není cesta k konfiguraci uvedena argumentem, hledá program soubor \texttt{.location\_manager.cfg} v domovské složce. Program je možné bezpečně ukončit stiskem \textit{Ctrl-C} nebo signálem \textit{SIGTERM}.
 
 \section*{Příklad konfigurace}
 Uvažme notebook, který se běžně přesouvá mezi lokacemi \texttt{doma} a \texttt{kolej}. Kromě toho je k němu občas ve škole připojen \texttt{projektor}. Doma bude k notebooku připojena USB myš, na koleji zase USB myš, klávesnice a externí monitor, který rozšiřuje pracovní plochu doprava nahoru. Naopak při připojení projektoru chceme nastavit klonování obrazu. Doma i na koleji je navíc k dispozici bezdrátová síť. \\

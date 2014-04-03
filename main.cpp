@@ -40,7 +40,7 @@ po::variables_map process_args(int argc, char **argv) {
     po::options_description desc("Allowed options");
     desc.add_options()
             ("help", "produce help message")
-            ("cfg,C", po::value<string>()->default_value("~/.profile_manager.cfg"), "path to config file")
+            ("cfg,C", po::value<string>()->default_value("~/.location_manager.cfg"), "path to config file")
     ;
     po::variables_map vm;
     po::store(po::parse_command_line(argc, argv, desc), vm);
@@ -61,7 +61,7 @@ string dirname;
 int main(int argc, char** argv) {
     google::InitGoogleLogging(argv[0]);
     google::SetStderrLogging(google::WARNING); // Log info-level messages to stderr
-    LOG(WARNING) << "Profile manager v" << version << " init";
+    LOG(WARNING) << "Location manager v" << version << " init";
     dirname = boost::filesystem::path(argv[0]).parent_path().string();
     LOG(INFO) << "Will be looking for ext-modules and helpers directories in " << dirname;
     po::variables_map vm = process_args(argc, argv);

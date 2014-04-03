@@ -13,8 +13,8 @@ CND_BUILDDIR=build
 CND_DLIB_EXT=so
 NBTMPDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=profile_manager
-OUTPUT_BASENAME=profile_manager
+OUTPUT_PATH=location_manager
+OUTPUT_BASENAME=location_manager
 PACKAGE_TOP_DIR=profilemanager/
 
 # Functions

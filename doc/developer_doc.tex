@@ -9,7 +9,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \author{Jan Škoda}
-\title{Profile manager \\ Vývojářská dokumentace}
+\title{Location manager \\ Vývojářská dokumentace}
 \begin{document}
 \maketitle
 \pagestyle{empty}
@@ -39,7 +39,7 @@ Moduly jsou celky, poskytující programu interakci se systémem. A to jak vstup
 \\
 Každý modul též implementuje virtuální metodu \texttt{void watch()}, která vytvoří jeho vlákno obsluhující změny v systému. Všechny interní moduly z důvodů efektivity využívají vždy jen pasivní čekání (poll, inotify). Pokud dojde ke změně, vyžádá si modul nové vyhodnocení přítomnosti v lokacích (dosazení do termů) zavoláním statické metody \texttt{void reprocess()}. Tato metoda je thread-safe díky mutexovému lock\_guardu. \\
 \\
-Externí moduly realizují zmíněné vstupně výstupní metody voláním příslušného bashového skriptu. Jejich účelem je umožnit uživateli, aby snadno mohl přidávat vlastní funkcionalitu, kterou bude Profile manager umět automaticky využívat. Metoda \texttt{watch} je u smyslových externích modulů implementována aktivním čekáním, tj. každých 5 sekunds znovu spouští skript a dotazuje se jej na změny. \\
+Externí moduly realizují zmíněné vstupně výstupní metody voláním příslušného bashového skriptu. Jejich účelem je umožnit uživateli, aby snadno mohl přidávat vlastní funkcionalitu, kterou bude Location manager umět automaticky využívat. Metoda \texttt{watch} je u smyslových externích modulů implementována aktivním čekáním, tj. každých 5 sekunds znovu spouští skript a dotazuje se jej na změny. \\
 
 \section*{Rozhraní externích modulů}
 Každý externí modul je bashový skript ve složce \texttt{ext-modules}. Při spuštění skriptu bez parametrů vypíše skript na výstup na každé řádce jednu proměnnou a její hodnotu oddělené rovnítkem, kolem nějž mohou být mezery. Pokud je skript zavolán s dvěma parametry, provede v systému změnu dle svého účelu. Prvním parametrem je identifikátor proměnné a druhým její hodnota. Pokud změna uspěje, musí vypsat jedinou řádku \texttt{SET}. Například modul {\it xrandr} při spuštění s parametry {\it vga-resolution} a {\it 1024x768} nastaví rozlišení VGA zařízení. \\

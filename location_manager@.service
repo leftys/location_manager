@@ -4,7 +4,7 @@ Requires=graphical.target
 
 [Service]
 User=%i
-ExecStart=/usr/libexec/profile_manager/profile_manager 
+ExecStart=/usr/libexec/location_manager/location_manager 
 KillSignal=SIGTERM
 Restart=always
 

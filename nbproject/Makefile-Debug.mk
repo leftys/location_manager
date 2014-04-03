@@ -63,10 +63,10 @@ LDLIBSOPTIONS=`pkg-config --libs libglog` `pkg-config --libs libusb-1.0` `pkg-co
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk profile_manager
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk location_manager
 
-profile_manager: ${OBJECTFILES}
-	${LINK.cc} -o profile_manager ${OBJECTFILES} ${LDLIBSOPTIONS} -lboost_program_options -lboost_system -lboost_filesystem -linotifytools
+location_manager: ${OBJECTFILES}
+	${LINK.cc} -o location_manager ${OBJECTFILES} ${LDLIBSOPTIONS} -lboost_program_options -lboost_system -lboost_filesystem -linotifytools
 
 ${OBJECTDIR}/_ext/1410871718/Module_monitor.o: /home/lefty/NetBeansProjects/profile_manager/Module_monitor.cpp 
 	${MKDIR} -p ${OBJECTDIR}/_ext/1410871718
@@ -114,7 +114,7 @@ ${OBJECTDIR}/main.o: main.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} profile_manager
+	${RM} location_manager
 
 # Subprojects
 .clean-subprojects:

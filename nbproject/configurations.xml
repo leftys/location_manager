@@ -23,7 +23,6 @@
                    displayName="Resource Files"
                    projectFiles="true">
       <itemPath>example.cfg</itemPath>
-      <itemPath>/home/lefty/NetBeansProjects/profile_manager/todo</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -68,7 +67,7 @@
           </incDir>
         </ccTool>
         <linkerTool>
-          <output>profile_manager</output>
+          <output>location_manager</output>
           <linkerLibItems>
             <linkerOptionItem>`pkg-config --libs libglog`</linkerOptionItem>
             <linkerOptionItem>`pkg-config --libs libusb-1.0`</linkerOptionItem>
@@ -100,11 +99,6 @@
             flavor2="0">
       </item>
       <item path="/home/lefty/NetBeansProjects/profile_manager/main.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="/home/lefty/NetBeansProjects/profile_manager/todo"
             ex="false"
             tool="3"
             flavor2="0">
@@ -179,11 +173,6 @@
             flavor2="0">
       </item>
       <item path="/home/lefty/NetBeansProjects/profile_manager/main.hpp"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="/home/lefty/NetBeansProjects/profile_manager/todo"
             ex="false"
             tool="3"
             flavor2="0">
